@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#FFF7F1" />
+<title>糸果家の台南小旅行 ${ic('shell')}</title>
+
+<!-- Tailwind CSS (CDN) -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- FontAwesome (CDN) -->
+<!-- Google Fonts：Baloo 2（圓潤標題/數字）＋ Noto Sans TC（內文） -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        milk:    '#FFF7F1',
+        cream:   '#FFFCF9',
+        card:    '#FFFFFF',
+        peach:   '#FF9FB2',
+        peachd:  '#F4768F',
+        mint:    '#8FE3D6',
+        mintd:   '#3FC2AE',
+        sky:     '#A9DCEF',
+        butter:  '#FFD98A',
+        lav:     '#C9B7F0',
+        plum:    '#5C4A56',
+        mute:    '#9A8893',
+        line:    '#F1E4DC'
+      },
+      fontFamily: {
+        round: ['"Baloo 2"', '"Noto Sans TC"', 'sans-serif'],
+        body:  ['"Noto Sans TC"', '"Baloo 2"', 'sans-serif']
+      },
+      borderRadius: { huge: '2rem', xl3: '1.75rem' },
+      boxShadow: {
+        soft:  '0 10px 30px -12px rgba(214,150,160,0.45)',
+        softer:'0 6px 18px -10px rgba(180,150,170,0.4)',
+        pop:   '0 14px 34px -10px rgba(244,118,143,0.45)'
+      }
+    }
+  }
+}
+</script>
+
+<style>
+  html,body{ -webkit-tap-highlight-color:transparent; }
+  body{
+    font-family:'Noto Sans TC','Baloo 2',sans-serif;
+    background:
+      radial-gradient(900px 500px at 110% -8%, rgba(143,227,214,.22), transparent 60%),
+      radial-gradient(800px 520px at -10% 6%, rgba(255,159,178,.20), transparent 60%),
+      #FFF7F1;
+    color:#5C4A56;
+  }
+  .font-round{ font-family:'Baloo 2','Noto Sans TC',sans-serif; }
+
+  /* 自訂 scrollbar 隱藏（橫向 tab） */
+  .no-sb::-webkit-scrollbar{ display:none; }
+  .no-sb{ -ms-overflow-style:none; scrollbar-width:none; }
+
+  /* 分頁切換動畫 */
+  .page{ display:none; animation:fade .35s ease both; }
+  .page.active{ display:block; }
+  @keyframes fade{ from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:translateY(0)} }
+
+  /* 底部導覽 */
+  .navbtn{ transition:transform .18s cubic-bezier(.34,1.56,.64,1), color .18s; }
+  .navbtn.on{ color:#F4768F; }
+  .navbtn.on .navicon{ transform:translateY(-6px) scale(1.08); }
+  .navbtn .navicon{
+    transition:transform .25s cubic-bezier(.34,1.56,.64,1), background .2s;
+  }
+  .navbtn.on .navicon{ background:linear-gradient(135deg,#FF9FB2,#FFC0A8); color:#fff; box-shadow:0 8px 16px -6px rgba(244,118,143,.6); }
+
+  /* 時間軸 */
+  .tl{ position:relative; padding-left:42px; }
+  .tl::before{
+    content:''; position:absolute; left:15px; top:6px; bottom:6px; width:3px;
+    background:linear-gradient(#FFD0DA,#BFEFE7,#D8CBF6); border-radius:3px;
+  }
+  .dot{
+    position:absolute; left:-38px; top:11px; width:26px; height:26px; border-radius:50%;
+    display:grid; place-items:center; font-size:14px; line-height:1; color:#fff;
+    box-shadow:0 4px 10px -4px rgba(0,0,0,.25); border:3px solid #FFFCF9;
+  }
+
+  /* 進度條 */
+  .barwrap{ background:#F3E6DE; border-radius:999px; overflow:hidden; }
+  .bar{ height:100%; border-radius:999px; transition:width .5s cubic-bezier(.4,1.2,.5,1);
+        background:linear-gradient(90deg,#FF9FB2,#FFD98A 60%,#8FE3D6); }
+
+  /* 可愛 checkbox */
+  .tick{ width:26px; height:26px; border-radius:9px; border:2.5px solid #F3D3CF;
+         display:grid; place-items:center; flex:none; transition:.2s; background:#fff; }
+  .tick .ck{ opacity:0; transform:scale(.4); transition:.2s; color:#fff; font-size:15px; font-weight:800; line-height:1; }
+  .done .tick{ background:linear-gradient(135deg,#FF9FB2,#FFB39A); border-color:transparent; }
+  .done .tick .ck{ opacity:1; transform:scale(1); }
+  .done .lbl{ text-decoration:line-through; color:#C9B6BE; }
+
+  /* toggle 收合 */
+  .acc-body{ max-height:0; overflow:hidden; transition:max-height .4s ease; }
+  .acc.open .acc-body{ max-height:4000px; }
+  .acc.open .chev{ transform:rotate(180deg); }
+  .chev{ transition:transform .35s; }
+
+  .pill{ transition:transform .12s ease, box-shadow .2s; }
+  .pill:active{ transform:scale(.95); }
+  /* 強制按鈕內容置中（避免 Tailwind 動態類別未生效） */
+  .ctrbtn{ display:flex !important; width:100% !important; align-items:center !important; justify-content:center !important; gap:6px; text-align:center; }
+  .ctrpill{ display:inline-flex !important; align-items:center !important; justify-content:center !important; gap:4px; }
+
+  /* 票價表 */
+  .ttbl div:nth-child(4n+1),.ttbl div:nth-child(4n+2){ background:#FFF6F8; }
+</style>
+</head>
+
+<body class="font-body min-h-screen">
+
+  <!-- ===== Header ===== -->
+  <header class="sticky top-0 z-40 backdrop-blur-md bg-milk/85 border-b border-line">
+    <div class="max-w-md mx-auto px-5 pt-3 pb-2.5 flex items-center gap-3">
+      <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-peach to-butter grid place-items-center shadow-soft text-white text-lg shrink-0">
+        <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.14em;flex:none"><path d="M3 20h18"/><path d="M9 20c-2-5-1.5-10 1-13"/><path d="M9 20c2-5 5-8 9-9"/><path d="M14 5a8 8 0 0 0-9 5"/><path d="M14 5a8 8 0 0 1 4 8"/></svg>
+      </div>
+      <div class="leading-tight">
+        <h1 class="font-round font-extrabold text-[19px] text-plum">糸果家の台南小旅行</h1>
+        <p class="text-[11px] text-mute font-medium tracking-wide">2026 · 8/22 – 8/26 ｜ 爸爸 · 媽媽 · 糸糸 · 果果</p>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== Main ===== -->
+  <main class="max-w-md mx-auto px-4 pt-4 pb-28">
+
+    <!-- ========== 行程總覽 ========== -->
+    <section id="page-overview" class="page active"></section>
+
+    <!-- ========== 住宿資訊 ========== -->
+    <section id="page-stay" class="page"></section>
+
+    <!-- ========== 每日行程 ========== -->
+    <section id="page-daily" class="page"></section>
+
+    <!-- ========== 清單 ========== -->
+    <section id="page-lists" class="page"></section>
+
+  </main>
+
+  <!-- ===== Bottom Nav ===== -->
+  <nav class="fixed bottom-0 inset-x-0 z-50">
+    <div class="max-w-md mx-auto px-4 pb-3">
+      <div class="bg-white/95 backdrop-blur border border-line rounded-huge shadow-soft flex justify-around py-2.5 px-1">
+        <button data-tab="overview" class="navbtn on flex flex-col items-center gap-1 w-1/4 text-mute">
+          <span class="navicon w-11 h-11 rounded-2xl grid place-items-center text-[17px] bg-milk"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.14em;flex:none"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14"/><path d="M15 6v14"/></svg></span>
+          <span class="text-[10.5px] font-bold">總覽</span>
+        </button>
+        <button data-tab="stay" class="navbtn flex flex-col items-center gap-1 w-1/4 text-mute">
+          <span class="navicon w-11 h-11 rounded-2xl grid place-items-center text-[17px] bg-milk"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.14em;flex:none"><path d="M17 13.2A7 7 0 1 1 9.8 5a5.6 5.6 0 0 0 7.2 8.2Z"/><path d="M15.5 3h4l-4 4h4"/><path d="M18.5 9h3l-3 3h3"/></svg></span>
+          <span class="text-[10.5px] font-bold">住宿</span>
+        </button>
+        <button data-tab="daily" class="navbtn flex flex-col items-center gap-1 w-1/4 text-mute">
+          <span class="navicon w-11 h-11 rounded-2xl grid place-items-center text-[17px] bg-milk"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.14em;flex:none"><path d="M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Z"/><path d="M4 9h16"/><path d="M8 3v3"/><path d="M16 3v3"/></svg></span>
+          <span class="text-[10.5px] font-bold">行程</span>
+        </button>
+        <button data-tab="lists" class="navbtn flex flex-col items-center gap-1 w-1/4 text-mute">
+          <span class="navicon w-11 h-11 rounded-2xl grid place-items-center text-[17px] bg-milk"><svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.14em;flex:none"><path d="M6 8h12a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z"/><path d="M9 8V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3"/><path d="M9.5 11.5v5"/><path d="M14.5 11.5v5"/></svg></span>
+          <span class="text-[10.5px] font-bold">清單</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+<script>
+/* ============================================================
+   工具
+============================================================ */
+const U = {
+  map:  q => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q),
+  blog: q => 'https://www.google.com/search?q=' + encodeURIComponent(q + ' 食記 評價'),
+  tel:  p => 'tel:' + String(p).replace(/[^0-9+]/g,''),
+  esc:  s => String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))
+};
+const $ = (s,el=document)=>el.querySelector(s);
+
+const IC = {"beach": "M3 20h18 M9 20c-2-5-1.5-10 1-13 M9 20c2-5 5-8 9-9 M14 5a8 8 0 0 0-9 5 M14 5a8 8 0 0 1 4 8", "map": "M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Z M9 4v14 M15 6v14", "bed": "M17 13.2A7 7 0 1 1 9.8 5a5.6 5.6 0 0 0 7.2 8.2Z M15.5 3h4l-4 4h4 M18.5 9h3l-3 3h3", "calendar": "M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Z M4 9h16 M8 3v3 M16 3v3", "suitcase": "M6 8h12a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z M9 8V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3 M9.5 11.5v5 M14.5 11.5v5", "pin": "M12 21c4-4 7-7.5 7-11a7 7 0 0 0-14 0c0 3.5 3 7 7 11Z M12 11.2a2.2 2.2 0 1 0 0-4.4 2.2 2.2 0 0 0 0 4.4Z", "phone": "M6.5 3.5h-2A1.5 1.5 0 0 0 3 5a16 16 0 0 0 16 16 1.5 1.5 0 0 0 1.5-1.5v-2.4l-4-1.6-1.8 1.8a12.5 12.5 0 0 1-6-6L9.5 9.5 8 5.5Z", "fork": "M4 13a8 8 0 0 1 16 0Z M3 16h18 M12 5V3 M12 5a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z", "cloud": "M7 9.5a4 4 0 1 1 7.6 1.6A3.4 3.4 0 1 1 16 17.5H7a4 4 0 0 1 0-8Z M12 4.5v-1.5 M17.5 6.7l1-1 M6.5 6.7l-1-1", "shell": "M12 21C7.5 21 4 17 4 11.5A8 8 0 0 1 20 11.5C20 17 16.5 21 12 21Z M12 21V4 M8 5.5 9.5 20 M16 5.5 14.5 20", "users": "M9 11a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4Z M3.5 20a5.5 5.5 0 0 1 11 0 M16 5a3 3 0 0 1 0 6 M18.5 20a5.5 5.5 0 0 0-3-5", "train": "M7 4h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z M5 10h14 M8.5 13.5h.01 M15.5 13.5h.01 M7.5 16 6 20 M16.5 16 18 20", "ticket": "M4 6h16a1 1 0 0 1 1 1v3a2 2 0 0 0 0 4v3a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-3a2 2 0 0 0 0-4V7a1 1 0 0 1 1-1Z M14 6v12", "coffee": "M5 8h11v5a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4Z M16 9h2.5a2 2 0 0 1 0 4H16 M8 3v2 M11.5 3v2", "star": "M12 4l2.3 4.7 5.2.8-3.8 3.7.9 5.1L12 16.6 7.4 19l.9-5.1L4.5 10.2l5.2-.8Z", "door": "M6 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17 M4 21h16 M14.5 12h.01", "coin": "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z M12 7v10 M14.5 9.3A3 3 0 0 0 12 8c-1.6 0-2.8.9-2.8 2.1s1 1.8 2.8 2.2 2.8 1 2.8 2.2S13.6 16 12 16a3 3 0 0 1-2.5-1.3", "clock": "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z M12 7.5V12l3 2", "crosshair": "M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16Z M12 2v3 M12 19v3 M2 12h3 M19 12h3 M12 13.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z", "info": "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z M12 11v5 M12 7.5h.01", "bulb": "M9.5 18h5 M10 21h4 M12 3a6 6 0 0 1 3.8 10.6c-.6.5-.8 1.1-.8 1.9H9c0-.8-.2-1.4-.8-1.9A6 6 0 0 1 12 3Z", "heart": "M12 20S4 15 4 9.2A4.2 4.2 0 0 1 12 7a4.2 4.2 0 0 1 8 2.2C20 15 12 20 12 20Z", "layers": "M12 3l9 4.5-9 4.5-9-4.5Z M3 12l9 4.5 9-4.5 M3 16.5 12 21l9-4.5", "nav": "M21 3 3 11l8 2 2 8Z", "tag": "M3.5 3.5h7L21 14l-7 7L3.5 10.5Z M7.5 7.5h.01", "fish": "M16 12c0 3-3.6 5.5-8 5.5-1.8 0-3.5-.5-3.5-.5s1.5-2 1.5-5-1.5-5-1.5-5 1.7-.5 3.5-.5c4.4 0 8 2.5 8 5.5Z M16 12c2-1.5 5-2.5 5-2.5s-1 2.5 0 5c0 0-3-1-5-2.5Z M7 11h.01", "palette": "M12 3.5a8.5 8.5 0 0 0 0 17c1.4 0 2-.9 2-1.8s-.8-1.4-.8-2.2c0-.9.8-1.5 1.8-1.5h1.5a3.7 3.7 0 0 0 3.7-3.7c0-4.3-3.7-7.8-8.2-7.8Z M7.5 11h.01 M12 8h.01 M16 11h.01", "water": "M3 7c2 0 2.2-1.8 4.5-1.8S10 7 12 7s2.2-1.8 4.5-1.8S19 7 21 7 M3 12.5c2 0 2.2-1.8 4.5-1.8S10 12.5 12 12.5s2.2-1.8 4.5-1.8S19 12.5 21 12.5 M3 18c2 0 2.2-1.8 4.5-1.8S10 18 12 18s2.2-1.8 4.5-1.8S19 18 21 18", "bowl": "M3.5 11h17a8.5 8.5 0 0 1-17 0Z M12 11V8 M9 8a3 3 0 0 1 6 0", "droplet": "M12 3.5s6 6 6 10.5a6 6 0 0 1-12 0c0-4.5 6-10.5 6-10.5Z", "extinguisher": "M9 8a3 3 0 0 1 6 0v11a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2V8Z M15 7h3l1.5-2 M10 8V6.5", "castle": "M4 21V9l2.5 1.5L9 8l3 2.5L15 8l2.5 2.5L20 9v12Z M4 21h16 M10 21v-4a2 2 0 0 1 4 0v4", "museum": "M3 21h18 M5 21V10 M19 21V10 M9 21v-7 M15 21v-7 M3 10l9-6 9 6Z", "drum": "M4 7c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3Z M4 7v8c0 1.7 3.6 3 8 3s8-1.3 8-3V7 M18 5l3-2 M19 9.5l2.5 1", "grid": "M4 4h7v7H4Z M13 4h7v7h-7Z M4 13h7v7H4Z M13 13h7v7h-7Z", "sparkle": "M12 3l1.6 5.4L19 10l-5.4 1.6L12 17l-1.6-5.4L5 10l5.4-1.6Z M18.5 16l.6 1.9 1.9.6-1.9.6-.6 1.9-.6-1.9-1.9-.6 1.9-.6Z", "hourglass": "M6.5 3h11 M6.5 21h11 M8 3c0 4 8 5.5 8 9s-8 5-8 9 M16 3c0 4-8 5.5-8 9s8 5 8 9", "bus": "M5 6h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Z M4 11h16 M7.5 17 6.5 20 M16.5 17 17.5 20 M8 14h.01 M16 14h.01", "umbrella": "M12 3a9 9 0 0 1 9 9H3a9 9 0 0 1 9-9Z M12 12v6.5a1.8 1.8 0 0 0 3.6 0", "van": "M3 8h11v9H3Z M14 11h3.5L20 13.5V17h-6Z M7.5 17a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Z M16.5 17a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Z"};
+IC.backpack='M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2 M6 7h12a1 1 0 0 1 1 1v10a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a1 1 0 0 1 1-1Z M9 12h6 M9.5 7v13';IC.note='M6 3h9l4 4v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z M14 3v4h4 M8 12h8 M8 16h5';IC.sun='M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z M12 2v2 M12 20v2 M5 5l1.4 1.4 M17.6 17.6 19 19 M2 12h2 M20 12h2 M5 19l1.4-1.4 M17.6 6.4 19 5';IC.rain='M7 14a4 4 0 1 1 1-7.9 5 5 0 0 1 9.6 1.4A3.5 3.5 0 0 1 17 14Z M8 18l-1 2.5 M12 18l-1 2.5 M16 18l-1 2.5';
+function ic(n){const p=IC[n]||'';const segs=p.split(/(?=M)/);const body=segs.filter(s=>s.trim()).map(s=>`<path d="${s.trim()}"/>`).join('');return `<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:-0.14em;flex:none">${body}</svg>`;}
+
+
+/* 小元件：Maps / 電話 / 食記 按鈕 */
+function mapsBtn(q, label='地圖'){
+  return `<a href="${U.map(q)}" target="_blank" rel="noopener"
+    class="pill ctrbtn whitespace-nowrap bg-sky/40 text-[#2E7C97] text-[12px] font-bold px-3 py-1.5 rounded-full active:scale-95">
+    <span class="pointer-events-none">${ic('pin')}</span>${label}</a>`;
+}
+function telBtn(p){
+  return `<a href="${U.tel(p)}"
+    class="pill ctrbtn whitespace-nowrap bg-mint/40 text-[#1E8A78] text-[12px] font-bold px-3 py-1.5 rounded-full active:scale-95">
+    <span class="pointer-events-none">${ic('phone')}</span>${U.esc(p)}</a>`;
+}
+function blogBtn(name){
+  return `<a href="${U.blog(name)}" target="_blank" rel="noopener"
+    class="pill ctrbtn whitespace-nowrap bg-butter/55 text-[#A4791B] text-[12px] font-bold px-3 py-1.5 rounded-full active:scale-95">
+    <span class="pointer-events-none">${ic('fork')}</span>食記 / 評價</a>`;
+}
+
+/* ============================================================
+   行程資料（依真實行程；票價/時間以查得資料為準，出發前請再確認官方公告）
+============================================================ */
+const HOTELS = {
+  formosa: {
+    name:'福爾摩沙遊艇酒店',
+    en:'Formosa Yacht Hotel',
+    addr:'台南市安平區安平路988號',
+    tel:'06-3911313',
+    tel2:'06-3911338（訂房組）',
+    nights:'8/22 (五) – 8/24 (日) 退｜共 2 晚',
+    checkin:'入住 15:00｜退房 11:00',
+    breakfast:'威尼斯餐廳 06:30 – 10:00（人多時分梯次）',
+    facilities:[
+      {n:'水岸無邊際泳池（含兒童淺水區）', t:'依館內公告', loc:'戶外池畔', fee:'住客免費'},
+      {n:'室內溫水 SPA', t:'依館內公告', loc:'室內', fee:'住客免費'},
+      {n:'兒童遊戲室（積木 / 沙池 / 海洋球池）', t:'依館內公告', loc:'遊戲區', fee:'住客免費，限未滿12歲且身高120cm以下'},
+      {n:'活力健身房', t:'依館內公告', loc:'健身房', fee:'住客免費，需著運動鞋'}
+    ],
+    shuttle:{
+      has:true,
+      title:'有提供免費接駁（需預約）',
+      desc:'住客免費定時定點接駁：台南市政府（高鐵快捷公車站）↔ 飯店、飯店 → 台南火車站（後站）。座位有限額滿為止，請於入住 3 天前預約。',
+      how:'高鐵 → 搭 H31 高鐵快捷公車到「台南市政府」站 → 轉飯店接駁車',
+      bookTel:'06-3911313',
+      alt:'備案：高鐵轉台鐵沙崙線到台南火車站 → 前站圓環搭 2 號公車到「古運河（福爾摩沙遊艇酒店）」 → 步行 3 分鐘；或直接叫車約 NT$400–500。'
+    }
+  },
+  hushan: {
+    name:'捷絲旅 台南虎山館',
+    en:'Just Sleep Tainan Hushan',
+    addr:'台南市仁德區文華路二段300號',
+    tel:'06-2662528',
+    tel2:'',
+    nights:'8/24 (日) – 8/26 (二) 退｜共 2 晚',
+    checkin:'入住 15:00｜退房 12:00',
+    breakfast:'捷食藝 06:30 – 10:30（自助式）',
+    facilities:[
+      {n:'室外游泳池 + 露台', t:'依館內公告', loc:'戶外', fee:'住客免費'},
+      {n:'捷食藝餐廳（晚餐在地食材料理）', t:'晚餐時段依公告', loc:'1F', fee:'另計'},
+      {n:'Mini Mart 迷你商店', t:'24 小時', loc:'大廳', fee:'商品零售'},
+      {n:'免費地下停車場 + 電動車充電樁', t:'24 小時', loc:'B', fee:'住客免費'}
+    ],
+    shuttle:{
+      has:true,
+      title:'有提供免費接駁（需預約）',
+      desc:'距台南高鐵站約 12 分鐘車程，提供住客免費接駁服務（班次與名額有限，建議入住前先電話預約）。緊鄰奇美博物館、十鼓文創園區，步行即達。',
+      how:'高鐵 → 預約飯店免費接駁直達飯店',
+      bookTel:'06-2662528',
+      alt:'備案：高鐵叫車直達約 NT$180–260（約 12 分）。'
+    }
+  }
+};
+
+/* 餐廳資料庫 */
+const R = {
+  zhou:   {name:'周氏蝦捲（安平總店）', area:'安平', hours:'10:00–20:30', price:'$$（套餐約 NT$180–260）', q:'周氏蝦捲 安平總店'},
+  ke:     {name:'陳家蚵捲', area:'安平', hours:'10:00–18:30', price:'$（單點 NT$60 起）', q:'陳家蚵捲 安平'},
+  douhua: {name:'同記安平豆花', area:'安平', hours:'09:00–22:00', price:'$（一碗約 NT$45）', q:'同記安平豆花'},
+  haixian:{name:'七股海鮮餐廳（鹽山周邊）', area:'七股', hours:'約 11:00–19:00', price:'$$（合菜 / 海產）', q:'七股 海鮮餐廳'},
+  zhengwei:{name:'正味珍蚵嗲', area:'七股', hours:'約 10:00–18:00', price:'$（小吃）', q:'正味珍蚵嗲 七股'},
+  ayu:    {name:'阿裕牛肉湯（崑山店）', area:'仁德', hours:'06:00–13:30（售完為止）', price:'$$（牛肉湯約 NT$120 起）', q:'阿裕牛肉湯 崑山店'},
+  chimeifood:{name:'奇美食品幸福工廠（觀光工廠餐廳）', area:'仁德', hours:'09:00–17:30', price:'$$（簡餐 / 點心）', q:'奇美食品幸福工廠'},
+  tendrumeat:{name:'十鼓園區・十鼓餐廳 / 蜜橋咖啡', area:'仁德', hours:'園區營業時間內', price:'$$（園區內餐飲）', q:'十鼓文創園區 餐廳'},
+  duxiaoyue:{name:'度小月擔仔麵（中正旗艦店）', area:'中西區', hours:'11:00–21:00', price:'$$（擔仔麵 NT$50 起）', q:'度小月擔仔麵 中正路'},
+  renmei: {name:'仁德在地小吃（萬國通路周邊）', area:'仁德', hours:'依店家', price:'$（小吃）', q:'仁德 美食 萬國通路'}
+};
+
+const TRIP = {
+  days:[
+    /* ============== Day 1 ============== */
+    {
+      n:1, date:'8/22', wd:'五',
+      title:'高鐵南下 ‧ 安平初訪',
+      weather:'夏日炎熱 約 28–34°C｜午後雷陣雨機率高',
+      hotel:'formosa',
+      items:[
+        { time:'09:51', icon:'train', color:'#C9B7F0', kind:'交通',
+          name:'高鐵 #1213 出發', hours:'09:51 → 11:17 抵台南高鐵站',
+          transport:'抵達後可預約福爾摩沙遊艇酒店接駁（台南市政府站接送）或叫車前往安平放行李。',
+          note:'車程約 1.5 小時，先在車上補眠養精神，舒適出發'
+        },
+        { time:'13:00', icon:'fish', color:'#A9DCEF', kind:'景點',
+          name:'虱目魚主題館', mapQ:'虱目魚主題館 台南安平',
+          hours:'09:00 – 17:00',
+          feat:'以台南代表魚「虱目魚」為主題的觀光工廠，認識在地養殖與飲食文化，適合親子同遊。',
+          fac:'展示館・伴手禮販賣・DIY 教室',
+          act:'魚丸 / 魚鬆等 DIY 體驗（約 NT$300 / 份，建議現場或先電話確認場次）',
+          tickets:[{l:'入館參觀',p:'免費'},{l:'DIY 體驗',p:'$300 / 份'}],
+          stay:'約 1 – 1.5 小時',
+          transport:'安平區內景點，步行或短程叫車（NT$85 起跳）即可串連。',
+          food:[R.zhou, R.douhua]
+        },
+        { time:'15:00', icon:'palette', color:'#FF9FB2', kind:'景點',
+          name:'東興洋行（安平外商貿易紀念館）', mapQ:'東興洋行 安平',
+          hours:'10:00 – 18:00',
+          feat:'德商洋行歷史建築，紅磚拱廊很好拍，可在此安排手作體驗，雨天也適合。',
+          fac:'歷史建築・手作體驗工坊',
+          act:'藍曬 $200｜開運水晶原礦（小 $150 / 中 $280 / 大 $400）｜皮革戒指 $0 起・皮革字母鑰匙圈 $80',
+          tickets:[{l:'入館參觀',p:'免費'},{l:'藍曬體驗',p:'$200'},{l:'水晶原礦',p:'$150 起'}],
+          stay:'約 1 小時',
+          transport:'距虱目魚主題館步行或短程叫車可達。',
+          alt:'備案：安平定情碼頭德陽艦園區（軍艦博物館，登艦參觀）',
+          food:[R.ke]
+        },
+        { time:'17:00', icon:'water', color:'#FFD98A', kind:'散步',
+          name:'安平港散步 ‧ 看夕陽', mapQ:'安平港 觀夕平台 台南',
+          hours:'戶外全天（夕陽約 18:00–18:40）',
+          feat:'沿運河 / 安平港散步吹海風，傍晚的金色夕陽是安平最療癒的時刻。',
+          fac:'港灣步道・觀景平台',
+          stay:'約 1 小時',
+          transport:'步行或叫車前往觀夕平台。'
+        },
+        { time:'18:30', icon:'bowl', color:'#8FE3D6', kind:'晚餐',
+          name:'安平老街小吃晚餐', mapQ:'安平老街 延平街 台南',
+          hours:'店家多營業至 20:00–21:00',
+          feat:'蝦捲、蚵仔煎、豆花、蜜餞⋯一條街吃遍台南經典小吃，邊走邊吃最輕鬆。',
+          stay:'約 1.5 小時',
+          transport:'晚餐後叫車回飯店約 NT$85–150。',
+          food:[R.zhou, R.ke, R.douhua]
+        },
+        { time:'20:30', icon:'bed', color:'#C9B7F0', kind:'住宿',
+          name:'入住 ‧ 福爾摩沙遊艇酒店設施', mapQ:'福爾摩沙遊艇酒店',
+          feat:'回飯店玩無邊際泳池、兒童遊戲室，放鬆收心第一天。',
+          stay:'自由時間',
+        }
+      ]
+    },
+    /* ============== Day 2 ============== */
+    {
+      n:2, date:'8/23', wd:'六',
+      title:'七股鹽鄉 ‧ 海風放電',
+      weather:'晴朗炎熱 約 28–34°C｜鹽田無遮蔭，務必防曬補水',
+      hotel:'formosa',
+      items:[
+        { time:'09:30', icon:'coffee', color:'#FFD98A', kind:'早餐',
+          name:'飯店早餐（威尼斯餐廳）', hours:'06:30 – 10:00',
+          feat:'吃飽再出發，步調放慢不趕路。', stay:'從容用餐'
+        },
+        { time:'10:30', icon:'droplet', color:'#A9DCEF', kind:'景點',
+          name:'七股遊客中心 ‧ 成功鹽體驗館', mapQ:'七股遊客中心 成功鹽體驗館 台南',
+          hours:'09:00 – 17:30',
+          feat:'認識台灣鹽業文化，多種趣味鹽主題手作，孩子可以玩得很開心。旁邊七股鹽山可搭小火車登頂。',
+          fac:'鹽業展示・手作教室・周邊七股鹽山（可搭小火車）',
+          act:'鹽浴泡腳 $100｜鹽星星 $100｜鹽皂 $100｜鹽鹵豆花 $300｜鹽鹵愛玉 $300｜煮鹽體驗 $300',
+          tickets:[{l:'入館參觀',p:'免費'},{l:'手作體驗',p:'$100 起'},{l:'鹽山小火車',p:'另購'}],
+          stay:'約 2.5 – 3 小時（含體驗 + 鹽山）',
+          transport:'七股大眾運輸較不便，建議由安平叫車前往約 NT$400–550（約 30 分）；或假日台灣好行 99 台江線部分班次可達。',
+          food:[R.haixian, R.zhengwei]
+        },
+        { time:'15:00', icon:'extinguisher', color:'#FF9FB2', kind:'景點（選）',
+          name:'臺南市消防史料館', mapQ:'臺南市消防史料館',
+          hours:'10:00 – 16:00（週一公休）',
+          feat:'免費的小眾景點，消防主題對小朋友超有吸引力，可體驗角色裝扮、認識消防知識。',
+          fac:'消防文物展示・互動體驗',
+          tickets:[{l:'全票 / 兒童 / 身障 + 陪同',p:'全部免費'}],
+          stay:'約 1 小時',
+          transport:'回程順路安排，叫車前往；若體力已足可直接回飯店休息。',
+          note:'Optional：今天以七股為主，這站視小孩體力彈性安排。'
+        },
+        { time:'17:30', icon:'bed', color:'#C9B7F0', kind:'住宿',
+          name:'回飯店 ‧ 泳池 + SPA', mapQ:'福爾摩沙遊艇酒店',
+          feat:'傍晚回飯店泡水放電，晚餐可在安平就近解決或叫外送。',
+          stay:'自由時間'
+        }
+      ]
+    },
+    /* ============== Day 3 ============== */
+    {
+      n:3, date:'8/24', wd:'日',
+      title:'古堡探險 ‧ 奇美藝術日',
+      weather:'多雲時晴 約 28–33°C｜博物館室內涼爽，戶外備陽傘',
+      hotel:'hushan',
+      items:[
+        { time:'08:30', icon:'coffee', color:'#FFD98A', kind:'早餐',
+          name:'飯店早餐 + 退房寄行李', hours:'威尼斯餐廳 06:30 – 10:00',
+          feat:'今天換飯店，退房後行李可先寄放或直接帶往虎山館寄存。', stay:'從容用餐'
+        },
+        { time:'09:30', icon:'castle', color:'#A9DCEF', kind:'景點',
+          name:'安平古堡 + 熱蘭遮城博物館', mapQ:'安平古堡 台南',
+          hours:'08:30 – 17:10',
+          feat:'台灣最早的城堡，近 400 年歷史。登瞭望台俯瞰安平、看老榕盤根，搭配博物館認識大航海時代的台南。',
+          fac:'古堡瞭望台・熱蘭遮城博物館・老榕樹・周邊安平老街',
+          tickets:[
+            {l:'全票',p:'$70'},
+            {l:'半票（兒童 / 學生）',p:'$35'},
+            {l:'身心障礙者 + 陪同一名',p:'免費'},
+            {l:'未滿 6 歲',p:'免費'}
+          ],
+          stay:'約 1.5 小時',
+          transport:'飯店步行或短程叫車即達。',
+          food:[R.zhou]
+        },
+        { time:'13:00', icon:'museum', color:'#FF9FB2', kind:'景點',
+          name:'奇美博物館', mapQ:'奇美博物館 台南',
+          hours:'博物館 09:30 – 17:30（購票入場，週三休館）｜戶外園區 09:00 – 18:30（免費）',
+          feat:'歐風建築與噴泉超好拍。常設展含樂器、藝術、自然史、兵器四大領域，並有《埃及之王：法老》大英博物館特展。',
+          fac:'常設展廳・特展廳・阿波羅噴泉廣場・戶外大草坪',
+          act:'《埃及之王：法老》特展（280 件埃及文物，建議線上預約快速入場時段）',
+          tickets:[
+            {l:'全票（埃及特展 + 常設展）',p:'$780'},
+            {l:'兒童 / 青少年 7–22 歲',p:'$630'},
+            {l:'未滿 7 歲',p:'免費'},
+            {l:'身心障礙者 + 陪同一名',p:'免費'}
+          ],
+          stay:'約 3 – 4 小時',
+          transport:'安平 → 仁德距離較遠，建議叫車約 NT$350–450（約 30 分）。看完直接前往附近虎山館入住。',
+          note:'小提醒：保留奇美「埃及展門票」，明天去十鼓現場購票可享全票 / 兒童票 8 折。',
+          food:[R.chimeifood, R.ayu]
+        },
+        { time:'18:00', icon:'bed', color:'#C9B7F0', kind:'住宿',
+          name:'入住 ‧ 捷絲旅台南虎山館', mapQ:'捷絲旅 台南虎山館',
+          feat:'飯店緊鄰奇美 / 十鼓，從奇美過來很近。晚餐可在飯店捷食藝或周邊解決。',
+          stay:'自由時間'
+        }
+      ]
+    },
+    /* ============== Day 4 ============== */
+    {
+      n:4, date:'8/25', wd:'一',
+      title:'十鼓糖廠 ‧ 一票玩到底',
+      weather:'炎熱 約 28–34°C｜園區半室內半戶外，穿好走的鞋與襪',
+      hotel:'hushan',
+      items:[
+        { time:'09:00', icon:'coffee', color:'#FFD98A', kind:'早餐',
+          name:'飯店早餐（捷食藝）', hours:'06:30 – 10:30',
+          feat:'今天主場就在隔壁，吃飽慢慢走過去最悠閒。', stay:'從容用餐'
+        },
+        { time:'10:00', icon:'drum', color:'#FF9FB2', kind:'景點',
+          name:'十鼓仁糖文創園區（整日）', mapQ:'十鼓仁糖文創園區',
+          hours:'平日 10:00 – 17:20｜週末 9:30 – 17:50',
+          feat:'百年糖廠改造的鼓樂主題園區，必看震撼的「十鼓擊樂」定目劇表演；還有溜滑梯、煙囪滑梯、糖晶落體、天堂路天空步道等設施，大人小孩都能玩一整天。',
+          fac:'鼓樂劇場・夢糖工廠設施・煙囪溜滑梯・天堂路・修護書屋・園區餐飲（中午 11:45–13:10 部分設施保養）',
+          act:'鼓樂定目劇場次 11:00 / 15:00（單張票限看一場）｜設施體驗身高限制 100–150cm，需穿襪',
+          tickets:[
+            {l:'全票',p:'$509'},
+            {l:'兒童票',p:'$450'},
+            {l:'身心障礙票（限一位陪同）',p:'$254'},
+            {l:'憑奇美埃及展門票現場購票',p:'全票 / 兒童 8 折（全票約 $407）'}
+          ],
+          stay:'整日（建議含一場鼓樂表演）',
+          transport:'從虎山館步行即可抵達（同在文華路二段），完全不用煩惱交通',
+          note:'記得帶昨天的奇美埃及展門票享 8 折！',
+          food:[R.tendrumeat, R.ayu]
+        },
+        { time:'17:30', icon:'bed', color:'#C9B7F0', kind:'住宿',
+          name:'回飯店 ‧ 泳池放鬆', mapQ:'捷絲旅 台南虎山館',
+          feat:'玩了一整天，回飯店泳池與露台放鬆，晚餐可訂捷食藝在地料理。',
+          stay:'自由時間'
+        }
+      ]
+    },
+    /* ============== Day 5 ============== */
+    {
+      n:5, date:'8/26', wd:'二',
+      title:'觀光工廠 ‧ 滿載賦歸',
+      weather:'多雲 約 28–33°C｜室內為主，行李整理好再出門',
+      hotel:'hushan',
+      items:[
+        { time:'08:30', icon:'coffee', color:'#FFD98A', kind:'早餐',
+          name:'飯店早餐 + 退房', hours:'捷食藝 06:30 – 10:30｜退房 12:00',
+          feat:'最後一天，吃飽收行李，行李可先寄放飯店或帶著輕鬆移動。', stay:'從容用餐'
+        },
+        { time:'10:00', icon:'suitcase', color:'#A9DCEF', kind:'景點',
+          name:'萬國通路創意觀光工廠', mapQ:'萬國通路創意觀光工廠 台南',
+          hours:'08:00 – 17:00（週四休館）',
+          feat:'以行李箱為主題的觀光工廠，有大型裝置藝術超好拍，還能做金屬手作，替旅程畫下可愛句點。',
+          fac:'主題展區・拍照打卡點・手作 DIY・伴手禮',
+          act:'金屬存錢筒 $269（小）/ $399（大）｜筆筒 $299',
+          tickets:[{l:'入館參觀',p:'免費 / 低消依現場'},{l:'手作 DIY',p:'$269 起'}],
+          stay:'約 1.5 – 2 小時',
+          transport:'飯店叫車前往；參觀後直接前往台南高鐵站（仁德距高鐵約 15 分）。',
+          food:[R.renmei]
+        },
+        { time:'15:28', icon:'train', color:'#C9B7F0', kind:'交通',
+          name:'高鐵 #1238 返程', hours:'15:28 → 16:54 抵達',
+          transport:'預留時間從仁德前往台南高鐵站（叫車約 15–20 分），提早 30 分到站。',
+          note:'帶著滿滿回憶回家啦～ 旅程 END'
+        }
+      ]
+    }
+  ]
+};
+
+/* 估算門票（範例以 2 大人 + 2 兒童；體驗/DIY 另計） */
+const DAY_COST = {
+  1:{ total:'免費', sub:'虱目魚主題館・東興洋行入館免費；手作體驗另計' },
+  2:{ total:'免費', sub:'七股・消防史料館免費；鹽主題體驗 $100 起' },
+  3:{ total:'NT$ 3,030', sub:'安平古堡 $210 ＋ 奇美博物館 $2,820（2 大 2 小估算）' },
+  4:{ total:'NT$ 1,534 起', sub:'十鼓・憑奇美票 8 折（原價約 $1,918）' },
+  5:{ total:'免費', sub:'萬國通路觀光工廠；金屬手作 DIY $269 起' }
+};
+
+/* ============================================================
+   Render：行程總覽
+============================================================ */
+function renderOverview(){
+  const wrap = $('#page-overview');
+  let html = `
+  <div class="bg-gradient-to-br from-peach/90 to-butter/90 text-white rounded-xl3 p-5 shadow-pop mb-4 relative overflow-hidden">
+    <div class="absolute -right-6 -top-6 text-white/20 text-8xl"><span>${ic('shell')}</span></div>
+    <p class="text-[12px] font-bold tracking-wider opacity-90">FAMILY TRIP · TAINAN</p>
+    <h2 class="font-round font-extrabold text-2xl mt-1">台南 5 天 4 夜</h2>
+    <p class="text-[13px] mt-1 font-medium opacity-95">2026 / 8/22 (五) – 8/26 (二)</p>
+    <div class="flex gap-2 mt-3 flex-wrap text-[12px] font-bold">
+      <span class="ctrpill bg-white/25 rounded-full px-3 py-1"><span>${ic('users')}</span>4 人</span>
+      <span class="ctrpill bg-white/25 rounded-full px-3 py-1">${ic('bed')}2 間飯店</span>
+      <span class="ctrpill bg-white/25 rounded-full px-3 py-1"><span>${ic('train')}</span>高鐵往返</span>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-2 mb-3 px-1">
+    <span class="font-round font-extrabold text-plum text-lg">每日總覽</span>
+    <span class="h-px flex-1 bg-line"></span>
+  </div>`;
+
+  const dayTint = ['#FF9FB2','#8FE3D6','#A9DCEF','#FFD98A','#C9B7F0'];
+
+  TRIP.days.forEach((d,i)=>{
+    const tint = dayTint[i%5];
+    const spots = d.items.filter(it => ['景點','景點（選）','散步'].includes(it.kind));
+    const cost = DAY_COST[d.n];
+    let spotRows = d.items.map(it=>{
+      const m = it.mapQ ? ` <a href="${U.map(it.mapQ)}" target="_blank" rel="noopener" class="text-[#2E7C97] text-[12px] font-bold ml-1 align-middle"><span>${ic('pin')}</span></a>` : '';
+      return `<div class="flex gap-2 items-start text-[13px] py-1">
+        <span class="font-round font-bold text-mute w-12 shrink-0 text-[12px]">${U.esc(it.time)}</span>
+        <span class="leading-snug"><span class="font-bold text-plum">${U.esc(it.name)}</span>${m}</span>
+      </div>`;
+    }).join('');
+
+    html += `
+    <div class="bg-card rounded-xl3 shadow-softer mb-3.5 overflow-hidden border border-line">
+      <div class="flex items-center gap-3 px-4 py-3" style="background:linear-gradient(90deg,${tint}33,transparent)">
+        <div class="w-11 h-11 rounded-2xl grid place-items-center text-white font-round font-extrabold shadow-soft shrink-0" style="background:${tint}">
+          <span class="text-[11px] -mb-1">DAY</span><span class="text-lg leading-none">${d.n}</span>
+        </div>
+        <div class="leading-tight flex-1">
+          <p class="font-round font-extrabold text-plum text-[15px]">${U.esc(d.title)}</p>
+          <p class="text-[11.5px] text-mute font-medium">${d.date}（${d.wd}）</p>
+        </div>
+      </div>
+      <div class="px-4 pb-3 pt-1">
+        ${spotRows}
+        <div class="mt-3 rounded-2xl bg-milk px-4 py-3">
+          <div class="flex items-center justify-between gap-3">
+            <span class="text-[12px] font-bold text-plum">當天門票 / 設施</span>
+            <span class="font-round font-extrabold text-[17px] text-peachd whitespace-nowrap">${cost.total}</span>
+          </div>
+          <p class="text-[11px] text-mute mt-1 leading-snug">${cost.sub}</p>
+        </div>
+      </div>
+    </div>`;
+  });
+
+  html += `
+  <div class="bg-mint/20 border border-mint/40 rounded-2xl p-3.5 text-[12px] text-[#2d7d70] leading-relaxed flex gap-2 mt-1">
+    <span class="mt-0.5">${ic('info')}</span>
+    <span>費用為「2 大人 + 2 兒童」估算，實際依孩子年齡票種而定；票價與營業時間可能調整，出發前請再向各景點官方確認唷。</span>
+  </div>`;
+  wrap.innerHTML = html;
+}
+
+/* ============================================================
+   Render：住宿
+============================================================ */
+function hotelCard(h){
+  const fac = h.facilities.map(f=>`
+    <div class="rounded-2xl bg-milk px-3.5 py-2.5">
+      <p class="font-bold text-plum text-[13px]">${U.esc(f.n)}</p>
+      <div class="flex flex-wrap gap-x-3 gap-y-0.5 mt-1 text-[11.5px] text-mute">
+        <span><span class="mr-1">${ic('clock')}</span>${U.esc(f.t)}</span>
+        <span><span class="mr-1">${ic('crosshair')}</span>${U.esc(f.loc)}</span>
+        <span><span class="mr-1">${ic('coin')}</span>${U.esc(f.fee)}</span>
+      </div>
+    </div>`).join('');
+
+  const s = h.shuttle;
+  const shuttleBox = `
+    <div class="rounded-2xl p-3.5 ${s.has?'bg-mint/25 border border-mint/40':'bg-butter/25 border border-butter/50'}">
+      <p class="font-bold text-[13px] text-plum flex items-center gap-1.5">
+        <span class="mr-0.5">${s.has?ic('van'):ic('bus')}</span>${U.esc(s.title)}
+      </p>
+      <p class="text-[12px] text-plum/80 mt-1.5 leading-relaxed">${U.esc(s.desc)}</p>
+      ${s.how?`<p class="text-[12px] text-plum/80 mt-1.5 leading-relaxed"><span class="font-bold">搭乘方式：</span>${U.esc(s.how)}</p>`:''}
+      <div class="mt-2.5">
+        ${s.bookTel?`<a href="${U.tel(s.bookTel)}" class="pill ctrbtn whitespace-nowrap bg-white text-mintd text-[12px] font-bold px-3 py-1.5 rounded-full shadow-softer"><span class="pointer-events-none">${ic('phone')}</span>預約接駁 ${U.esc(s.bookTel)}</a>`:''}
+      </div>
+      ${s.alt?`<p class="text-[11.5px] text-mute mt-2 leading-relaxed"><span class="mr-1">${ic('info')}</span>${U.esc(s.alt)}</p>`:''}
+    </div>`;
+
+  return `
+  <div class="bg-card rounded-xl3 shadow-soft border border-line overflow-hidden mb-4">
+    <div class="px-5 pt-4 pb-3 bg-gradient-to-br from-lav/30 to-sky/20">
+      <p class="text-[11px] font-bold text-mute tracking-wider">${U.esc(h.en)}</p>
+      <h3 class="font-round font-extrabold text-xl text-plum">${U.esc(h.name)}</h3>
+      <p class="text-[12px] text-plum/70 font-medium mt-1"><span class="mr-1">${ic('calendar')}</span>${U.esc(h.nights)}</p>
+      <p class="text-[12px] text-plum/70 font-medium"><span class="mr-1">${ic('door')}</span>${U.esc(h.checkin)}</p>
+    </div>
+    <div class="px-4 py-4 space-y-3">
+      <div class="grid grid-cols-2 gap-2">
+        ${mapsBtn(h.name)}
+        ${telBtn(h.tel)}
+      </div>
+      <div class="text-[12.5px] text-plum/80 leading-relaxed">
+        <p><span class="text-peach w-4">${ic('pin')}</span> ${U.esc(h.addr)}</p>
+        ${h.tel2?`<p><span class="text-peach w-4">${ic('phone')}</span> ${U.esc(h.tel2)}</p>`:''}
+        <p><span class="text-peach w-4">${ic('coffee')}</span> 早餐：${U.esc(h.breakfast)}</p>
+      </div>
+
+      <div>
+        <p class="font-round font-bold text-plum text-[14px] mb-2 flex items-center gap-1.5"><span class="text-butter">${ic('star')}</span>飯店設施</p>
+        <div class="space-y-2">${fac}</div>
+      </div>
+
+      ${shuttleBox}
+    </div>
+  </div>`;
+}
+function renderStay(){
+  $('#page-stay').innerHTML = `
+    <div class="flex items-center gap-2 mb-3 px-1">
+      <span class="font-round font-extrabold text-plum text-lg">住宿資訊</span>
+      <span class="h-px flex-1 bg-line"></span>
+      <span class="text-[11px] text-mute font-bold">2 間 · 4 晚</span>
+    </div>
+    ${hotelCard(HOTELS.formosa)}
+    ${hotelCard(HOTELS.hushan)}
+  `;
+}
+
+/* ============================================================
+   Render：每日行程
+============================================================ */
+let curDay = 1;
+function foodCard(f){
+  return `
+  <div class="rounded-2xl bg-milk px-3.5 py-2.5 mt-2">
+    <p class="font-bold text-plum text-[13px]"><span class="text-peach mr-1.5">${ic('fork')}</span>${U.esc(f.name)}</p>
+    <div class="flex flex-wrap gap-x-3 gap-y-0.5 mt-1 text-[11.5px] text-mute">
+      <span><span class="mr-1">${ic('nav')}</span>${U.esc(f.area)}</span>
+      <span><span class="mr-1">${ic('clock')}</span>${U.esc(f.hours)}</span>
+      <span><span class="mr-1">${ic('tag')}</span>${U.esc(f.price)}</span>
+    </div>
+    <div class="grid grid-cols-2 gap-2 mt-2">
+      ${blogBtn(f.name)}
+      ${mapsBtn(f.q,'地圖')}
+    </div>
+  </div>`;
+}
+function ticketTable(arr){
+  if(!arr) return '';
+  const rows = arr.map(t=>`
+    <div class="px-3 py-2 text-[12.5px] text-plum/80">${U.esc(t.l)}</div>
+    <div class="px-3 py-2 text-[12.5px] font-bold text-peachd text-right font-round">${U.esc(t.p)}</div>`).join('');
+  return `
+  <div class="mt-2">
+    <p class="text-[12.5px] font-bold text-plum mb-1.5 flex items-center gap-1.5"><span class="text-peachd">${ic('ticket')}</span>票價</p>
+    <div class="ttbl grid grid-cols-[1fr_auto] rounded-2xl overflow-hidden border border-line">${rows}</div>
+  </div>`;
+}
+function infoRow(icon,label,val){
+  if(!val) return '';
+  return `<div class="flex gap-2 text-[12.5px] text-plum/80 leading-relaxed mt-1.5">
+    <span class="w-4 mt-0.5 shrink-0 text-center inline-block">${ic(icon)}</span>
+    <span><span class="font-bold text-plum">${label}：</span>${U.esc(val)}</span>
+  </div>`;
+}
+function dayItem(it){
+  const tag = `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full text-white" style="background:${it.color}">${U.esc(it.kind)}</span>`;
+  let body = '';
+  body += it.feat ? `<p class="text-[12.5px] text-plum/80 leading-relaxed mt-1.5">${U.esc(it.feat)}</p>` : '';
+  if(it.hours)     body += infoRow('clock','營業時間',it.hours);
+  if(it.fac)       body += infoRow('grid','設施 / 開放',it.fac);
+  if(it.act)       body += infoRow('sparkle','體驗活動',it.act);
+  if(it.stay)      body += infoRow('hourglass','建議停留',it.stay);
+  if(it.transport) body += infoRow('bus','交通建議',it.transport);
+  if(it.alt)       body += infoRow('umbrella','備案',it.alt);
+  body += ticketTable(it.tickets);
+  if(it.food && it.food.length){
+    body += `<p class="text-[12.5px] font-bold text-plum mt-3 mb-0.5 flex items-center gap-1.5"><span class="text-peach">${ic('fork')}</span>周邊推薦餐廳</p>`;
+    body += it.food.map(foodCard).join('');
+  }
+  if(it.note) body += `<div class="mt-2.5 rounded-2xl bg-butter/25 px-3 py-2 text-[12px] text-[#a4791b] leading-relaxed flex gap-2"><span class="mt-0.5">${ic('bulb')}</span><span>${U.esc(it.note)}</span></div>`;
+
+  const mapBtnHtml = it.mapQ ? `<div class="mt-2.5">${mapsBtn(it.mapQ)}</div>` : '';
+
+  return `
+  <div class="relative mb-4">
+    <div class="dot" style="background:${it.color}">${ic(it.icon)}</div>
+    <div class="bg-card rounded-xl3 shadow-softer border border-line p-4">
+      <div class="flex items-center justify-between gap-2">
+        <span class="font-round font-extrabold text-peachd text-[15px]">${U.esc(it.time)}</span>
+        ${tag}
+      </div>
+      <h4 class="font-bold text-plum text-[15px] mt-1 leading-snug">${U.esc(it.name)}</h4>
+      ${mapBtnHtml}
+      ${body}
+    </div>
+  </div>`;
+}
+/* ===== 天氣：Open-Meteo（免費、免金鑰、離線自動退回季節概估）===== */
+let WX=null, WXstate='loading';
+function tripISO(d){ var p=d.date.split('/'); return '2026-'+('0'+p[0]).slice(-2)+'-'+('0'+p[1]).slice(-2); }
+function WMO(code){
+  if(code<=1) return {i:'sun', t:'晴'};
+  if(code<=3) return {i:'cloud', t:'多雲'};
+  if(code<=48) return {i:'cloud', t:'有霧'};
+  if(code>=95) return {i:'rain', t:'雷陣雨'};
+  if((code>=51&&code<=67)||(code>=80&&code<=82)) return {i:'rain', t:'有雨'};
+  return {i:'cloud', t:'多雲'};
+}
+async function loadWeather(){
+  try{
+    var url='https://api.open-meteo.com/v1/forecast?latitude=22.99&longitude=120.2&current=temperature_2m,precipitation,weather_code,relative_humidity_2m&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,weather_code&timezone=Asia%2FTaipei&forecast_days=16';
+    var r=await fetch(url); if(!r.ok) throw 0;
+    var j=await r.json(), daily={};
+    (j.daily.time||[]).forEach(function(t,i){ daily[t]={tmax:Math.round(j.daily.temperature_2m_max[i]),tmin:Math.round(j.daily.temperature_2m_min[i]),psum:j.daily.precipitation_sum[i],pprob:j.daily.precipitation_probability_max[i],code:j.daily.weather_code[i]}; });
+    WX={current:{temp:Math.round(j.current.temperature_2m),precip:j.current.precipitation,code:j.current.weather_code,hum:j.current.relative_humidity_2m},daily:daily};
+    WXstate='ok';
+  }catch(e){ WXstate='fail'; }
+  if($('#page-daily').classList.contains('active')) renderDaily();
+}
+function weatherHTML(d){
+  var seasonal='<p class="text-[11px] text-mute mt-1.5 leading-snug">季節概估：'+U.esc(d.weather)+'</p>';
+  if(WXstate==='loading') return '<div class="text-[12.5px] text-mute">讀取台南即時天氣中…</div>'+seasonal;
+  if(WXstate==='fail') return '<div class="flex items-center gap-2 text-[12.5px] font-medium text-plum/80">'+ic('cloud')+'<span>'+U.esc(d.weather)+'</span></div><p class="text-[11px] text-mute mt-1">目前無法連線取得即時天氣，顯示季節概估</p>';
+  var iso=tripISO(d), fc=WX.daily[iso];
+  if(fc){ var w=WMO(fc.code);
+    return '<div class="flex items-center gap-2 text-[13.5px] font-bold text-plum">'+ic(w.i)+'<span>當日預報 '+fc.tmin+'–'+fc.tmax+'\u00B0C</span></div>'
+      +'<p class="text-[12px] text-plum/75 mt-1">'+w.t+'｜降雨機率 '+(fc.pprob==null?'—':fc.pprob)+'%｜雨量 '+fc.psum+' mm</p>'
+      +'<p class="text-[10.5px] text-mintd font-bold mt-1">即時資料 · Open-Meteo</p>'+seasonal;
+  }
+  var c=WX.current, w=WMO(c.code);
+  return '<div class="flex items-center gap-2 text-[13.5px] font-bold text-plum">'+ic(w.i)+'<span>目前台南 '+c.temp+'\u00B0C</span></div>'
+    +'<p class="text-[12px] text-plum/75 mt-1">'+w.t+'｜即時降雨 '+c.precip+' mm｜濕度 '+c.hum+'%</p>'
+    +'<p class="text-[11px] text-mute mt-1">'+d.date+' 當日預報將於出發前約 16 天開放</p>'+seasonal;
+}
+
+function renderDaily(){
+  const wrap = $('#page-daily');
+  const tabs = TRIP.days.map(d=>`
+    <button data-day="${d.n}" class="daytab pill shrink-0 px-4 py-2 rounded-2xl font-round font-extrabold text-[13px] ${d.n===curDay?'text-white shadow-soft':'text-mute bg-white border border-line'}"
+      style="${d.n===curDay?'background:linear-gradient(135deg,#FF9FB2,#FFC0A8)':''}">
+      D${d.n}<span class="block text-[10px] font-bold ${d.n===curDay?'opacity-90':'opacity-70'}">${d.date}</span>
+    </button>`).join('');
+
+  const d = TRIP.days.find(x=>x.n===curDay);
+  const items = d.items.map(dayItem).join('');
+
+  wrap.innerHTML = `
+    <div class="flex gap-2 overflow-x-auto no-sb pb-1 mb-3 -mx-1 px-1">${tabs}</div>
+
+    <div class="bg-gradient-to-br from-sky/30 to-mint/20 rounded-xl3 p-4 mb-4 border border-line">
+      <p class="text-[11px] font-bold text-mute tracking-wider">DAY ${d.n} · ${d.date}（${d.wd}）</p>
+      <h2 class="font-round font-extrabold text-xl text-plum mt-0.5">${U.esc(d.title)}</h2>
+      <div class="mt-2.5 rounded-2xl bg-white/70 px-3.5 py-2.5">
+        ${weatherHTML(d)}
+      </div>
+      <div class="mt-2">
+        <a href="https://www.google.com/search?q=${encodeURIComponent('台南 一週天氣 '+d.date)}" target="_blank" rel="noopener"
+           class="pill ctrbtn whitespace-nowrap bg-white text-[#2E7C97] text-[11.5px] font-bold px-3 py-1.5 rounded-full shadow-softer">
+           <span class="pointer-events-none">${ic('cloud')}</span>查當日天氣預報</a>
+      </div>
+    </div>
+
+    <div class="tl">${items}</div>
+
+    <div class="bg-mint/20 border border-mint/40 rounded-2xl p-3.5 text-[12px] text-[#2d7d70] leading-relaxed flex gap-2">
+      <span class="mt-0.5">${ic('heart')}</span>
+      <span>天氣為夏季概估，出發前請看即時預報；票價 / 場次以官方公告為準。步調已刻意放鬆，累了就回飯店玩設施唷～</span>
+    </div>`;
+
+  wrap.querySelectorAll('.daytab').forEach(b=>{
+    b.onclick = ()=>{ curDay = +b.dataset.day; renderDaily(); window.scrollTo({top:0,behavior:'smooth'}); };
+  });
+}
+
+/* ============================================================
+   Render：清單（LocalStorage）
+============================================================ */
+const LS = {
+  get:(k,def)=>{ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):def; }catch(e){ return def; } },
+  set:(k,v)=>{ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+};
+
+let _uid = 0;
+const uid = ()=> 'k' + Date.now().toString(36) + (_uid++).toString(36);
+
+const DEF_BACKPACK = ['水壺','口罩','衛生紙','消毒用品','酒精','涼感濕巾','雨具','錢包＋現金','小本子（蓋紀念章 / 記費用）','玩具']
+  .map(n=>({id:uid(), n, done:false}));
+
+const DEF_SUITCASE = [
+  { id:uid(), cat:'衣物類', open:true, items:[
+    '爸爸內褲*4','媽媽內褲*4','糸糸內褲*4','果果內褲*4',
+    '爸爸襪子*4','媽媽襪子*4','糸糸襪子*4','果果襪子*4',
+    '爸爸外出衣*4','媽媽外出衣*4','糸糸外出衣*4','果果外出衣*4',
+    '爸爸外出褲*1','媽媽外出褲*1','糸糸外出褲*2','果果外出褲*2',
+    '爸爸居家褲*1','媽媽居家褲*1',
+    '爸爸外套*1','媽媽外套*1','糸糸外套*1','果果外套*1','拖鞋'
+  ].map(n=>({id:uid(),n,done:false})) },
+  { id:uid(), cat:'用品類', open:true, items:[
+    '大人水壺','糸糸水壺','果果水壺','牙刷','牙膏','乳霜','陪睡娃娃',
+    '防蚊貼','防蚊液','止癢藥膏','涼感濕巾','頭痛藥','維他命','魚油','專心藥','鼻子噴劑','衛生棉',
+    'iPad','喇叭','耳機','可插手機 / 平板的耳機','筆電','手機充電器','平板充電器','筆電充電器','行動電源','電風扇'
+  ].map(n=>({id:uid(),n,done:false})) }
+];
+
+/* 補齊舊資料缺少的 id，確保每個項目都能被唯一定位（修正新增項目刪不掉的問題） */
+function normBackpack(arr){ return (arr||[]).map(i=>({id:i.id||uid(), n:i.n, done:!!i.done})); }
+function normSuitcase(arr){ return (arr||[]).map(c=>({id:c.id||uid(), cat:c.cat, open:c.open!==false, items:(c.items||[]).map(i=>({id:i.id||uid(), n:i.n, done:!!i.done}))})); }
+
+let backpack = normBackpack(LS.get('tn_backpack', DEF_BACKPACK));
+let suitcase = normSuitcase(LS.get('tn_suitcase', DEF_SUITCASE));
+let memo     = LS.get('tn_memo', '');
+
+function saveAll(){ LS.set('tn_backpack',backpack); LS.set('tn_suitcase',suitcase); LS.set('tn_memo',memo); }
+
+function progressBar(done,total,color){
+  const pct = total? Math.round(done/total*100):0;
+  return `
+  <div class="flex items-center gap-2 mt-2">
+    <div class="barwrap flex-1 h-3"><div class="bar" style="width:${pct}%;background:${color}"></div></div>
+    <span class="font-round font-extrabold text-[13px] text-plum w-11 text-right">${pct}%</span>
+  </div>
+  <p class="text-[11px] text-mute mt-1">已打包 ${done} / ${total} 項</p>`;
+}
+
+function itemRow(it){
+  return `
+    <div class="flex items-center gap-3 py-2 ${it.done?'done':''}">
+      <button data-act="toggle" data-id="${it.id}" class="tk flex items-center gap-3 flex-1 text-left">
+        <span class="tick"><span class="ck pointer-events-none">✓</span></span>
+        <span class="lbl text-[14px] text-plum font-medium leading-snug pointer-events-none">${U.esc(it.n)}</span>
+      </button>
+      <button data-act="del" data-id="${it.id}" aria-label="刪除" class="del shrink-0 inline-flex items-center justify-center w-8 h-8 text-[15px] font-bold text-peachd bg-peach/15 rounded-full active:scale-90"><span class="pointer-events-none leading-none">✕</span></button>
+    </div>`;
+}
+
+function addRow(act, catId, placeholder){
+  const cat = catId ? ` data-cat="${catId}"` : '';
+  return `
+    <div class="flex gap-2 mt-2">
+      <input type="text" data-addinput="${act}"${cat} placeholder="${placeholder}"
+        class="flex-1 bg-milk rounded-2xl px-4 py-2.5 text-[13.5px] text-plum placeholder-mute/60 outline-none border border-line focus:border-peach transition" />
+      <button data-act="${act}"${cat} aria-label="新增" class="pill bg-gradient-to-br from-peach to-butter text-white w-11 rounded-2xl grid place-items-center shadow-soft active:scale-95 shrink-0"><span class="pointer-events-none" style="font-size:20px;line-height:1">＋</span></button>
+    </div>`;
+}
+
+/* ----- 以 id 操作資料（不依賴陣列索引）----- */
+function toggleItem(id){
+  const b = backpack.find(i=>i.id===id);
+  if(b){ b.done=!b.done; return; }
+  for(const c of suitcase){ const x=c.items.find(i=>i.id===id); if(x){ x.done=!x.done; return; } }
+}
+function delItem(id){
+  const bi = backpack.findIndex(i=>i.id===id);
+  if(bi>-1){ backpack.splice(bi,1); return; }
+  for(const c of suitcase){ const xi=c.items.findIndex(i=>i.id===id); if(xi>-1){ c.items.splice(xi,1); return; } }
+}
+
+let focusAfter = null; // 新增後要重新聚焦的輸入框
+
+function renderLists(){
+  const wrap = $('#page-lists');
+
+  const bpDone = backpack.filter(i=>i.done).length;
+  const scAll  = suitcase.flatMap(c=>c.items);
+  const scDone = scAll.filter(i=>i.done).length;
+
+  const bpRows = backpack.map(itemRow).join('') || `<p class="text-[12.5px] text-mute py-2">清單是空的，從下方新增吧！</p>`;
+
+  const catBlocks = suitcase.map(c=>{
+    const cDone = c.items.filter(i=>i.done).length;
+    const rows = c.items.map(itemRow).join('') || `<p class="text-[12.5px] text-mute py-1">尚無項目</p>`;
+    return `
+      <div class="acc rounded-2xl border border-line overflow-hidden ${c.open?'open':''}">
+        <button data-act="cat" data-cat="${c.id}" class="acc-head w-full flex items-center gap-2 px-3.5 py-3 bg-milk text-left">
+          <span class="text-mintd text-[13px] pointer-events-none">${ic('layers')}</span>
+          <span class="font-round font-bold text-plum text-[14px] flex-1 pointer-events-none">${U.esc(c.cat)}</span>
+          <span class="text-[11.5px] font-bold text-mute pointer-events-none">${cDone}/${c.items.length}</span>
+          <span class="chev text-mute text-[13px] pointer-events-none" style="display:inline-block;line-height:1">▾</span>
+        </button>
+        <div class="acc-body">
+          <div class="px-3.5 pb-2">${rows}</div>
+          <div class="px-3.5 pb-3">${addRow('add-sc', c.id, '新增「'+c.cat+'」物品…')}</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  wrap.innerHTML = `
+    <div class="flex items-center gap-2 mb-3 px-1">
+      <span class="font-round font-extrabold text-plum text-lg">打包清單</span>
+      <span class="h-px flex-1 bg-line"></span>
+    </div>
+
+    <div class="bg-card rounded-xl3 shadow-softer border border-line overflow-hidden mb-4">
+      <div class="px-4 pt-4 pb-3 bg-gradient-to-br from-peach/20 to-butter/15">
+        <p class="font-round font-extrabold text-plum text-[16px]">${ic('backpack')} 隨身背包清單</p>
+        ${progressBar(bpDone, backpack.length, 'linear-gradient(90deg,#FF9FB2,#FFD98A)')}
+      </div>
+      <div class="px-4 py-2">${bpRows}</div>
+      <div class="px-4 pb-4">${addRow('add-bp', '', '新增背包物品…')}</div>
+    </div>
+
+    <div class="bg-card rounded-xl3 shadow-softer border border-line overflow-hidden mb-4">
+      <div class="px-4 pt-4 pb-3 bg-gradient-to-br from-sky/25 to-mint/15">
+        <p class="font-round font-extrabold text-plum text-[16px]">${ic('suitcase')} 行李箱清單</p>
+        ${progressBar(scDone, scAll.length, 'linear-gradient(90deg,#8FE3D6,#A9DCEF)')}
+      </div>
+      <div class="px-4 py-3 space-y-3">${catBlocks}</div>
+    </div>
+
+    <div class="bg-card rounded-xl3 shadow-softer border border-line overflow-hidden mb-4">
+      <div class="px-4 pt-4 pb-2 bg-gradient-to-br from-lav/25 to-peach/10">
+        <p class="font-round font-extrabold text-plum text-[16px]">${ic('note')} 個人備忘錄</p>
+        <p class="text-[11px] text-mute mt-0.5">隨手記，會自動儲存在這台裝置</p>
+      </div>
+      <div class="px-4 py-3">
+        <textarea id="memo-ta" rows="6" placeholder="例如：糸糸的健保卡放外袋、果果暈車藥、預約飯店接駁電話…"
+          class="w-full bg-milk rounded-2xl px-4 py-3 text-[13.5px] text-plum placeholder-mute/60 outline-none border border-line focus:border-lav transition leading-relaxed resize-none"></textarea>
+        <p id="memo-saved" class="text-[11px] text-mintd font-bold mt-1.5 opacity-0 transition"><span class="mr-1">•</span>已儲存</p>
+      </div>
+    </div>
+
+    <div class="mt-1 text-center">
+      <button data-act="reset" class="text-[11.5px] text-mute/70 underline underline-offset-2"><span class="mr-1 pointer-events-none">↺</span>還原為預設清單</button>
+    </div>`;
+
+  // 備忘錄（每次重繪重新指定值與監聽，輸入不觸發重繪故無索引問題）
+  const ta = wrap.querySelector('#memo-ta'); ta.value = memo;
+  const savedTip = wrap.querySelector('#memo-saved');
+  let t;
+  ta.addEventListener('input', ()=>{
+    memo = ta.value; LS.set('tn_memo', memo);
+    savedTip.style.opacity='1'; clearTimeout(t); t=setTimeout(()=>savedTip.style.opacity='0',1200);
+  });
+
+  // 新增後把焦點放回對應輸入框
+  if(focusAfter){
+    const sel = focusAfter==='add-bp'
+      ? 'input[data-addinput="add-bp"]'
+      : `input[data-addinput="add-sc"][data-cat="${focusAfter}"]`;
+    const el = wrap.querySelector(sel); if(el) el.focus();
+    focusAfter = null;
+  }
+}
+
+/* 取輸入框的值並加入清單 */
+function doAdd(act, catId, value){
+  const v = (value||'').trim(); if(!v) return;
+  if(act==='add-bp'){ backpack.push({id:uid(), n:v, done:false}); focusAfter='add-bp'; }
+  else { const c = suitcase.find(c=>c.id===catId); if(c){ c.items.push({id:uid(), n:v, done:false}); c.open=true; focusAfter=catId; } }
+  saveAll(); renderLists();
+}
+
+/* ----- 事件委派：在容器 #page-lists 上只綁一次，重繪也不會失效 ----- */
+(function bindLists(){
+  const wrap = $('#page-lists');
+  wrap.addEventListener('click', e=>{
+    const el = e.target.closest('[data-act]'); if(!el || !wrap.contains(el)) return;
+    const act = el.dataset.act;
+    if(act==='toggle'){ toggleItem(el.dataset.id); saveAll(); renderLists(); }
+    else if(act==='del'){ delItem(el.dataset.id); saveAll(); renderLists(); }
+    else if(act==='cat'){ const c=suitcase.find(c=>c.id===el.dataset.cat); if(c){ c.open=!c.open; saveAll(); renderLists(); } }
+    else if(act==='add-bp'){ const inp=wrap.querySelector('input[data-addinput="add-bp"]'); doAdd('add-bp','', inp && inp.value); }
+    else if(act==='add-sc'){ const cid=el.dataset.cat; const inp=wrap.querySelector(`input[data-addinput="add-sc"][data-cat="${cid}"]`); doAdd('add-sc', cid, inp && inp.value); }
+    else if(act==='reset'){
+      if(confirm('確定要還原成預設清單嗎？已勾選與新增的項目會被清除。')){
+        backpack = normBackpack(JSON.parse(JSON.stringify(DEF_BACKPACK)));
+        suitcase = normSuitcase(JSON.parse(JSON.stringify(DEF_SUITCASE)));
+        memo=''; saveAll(); renderLists();
+      }
+    }
+  });
+  wrap.addEventListener('keydown', e=>{
+    if(e.key!=='Enter') return;
+    const inp = e.target.closest('input[data-addinput]'); if(!inp) return;
+    e.preventDefault();
+    doAdd(inp.dataset.addinput, inp.dataset.cat||'', inp.value);
+  });
+})();
+
+/* ============================================================
+   分頁切換
+============================================================ */
+const PAGES = {
+  overview:'#page-overview',
+  stay:'#page-stay',
+  daily:'#page-daily',
+  lists:'#page-lists'
+};
+function switchTab(tab){
+  Object.values(PAGES).forEach(p=>$(p).classList.remove('active'));
+  $(PAGES[tab]).classList.add('active');
+  document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('on', b.dataset.tab===tab));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.navbtn').forEach(b=>{
+  b.onclick = ()=>switchTab(b.dataset.tab);
+});
+
+/* ============================================================
+   初始化
+============================================================ */
+renderOverview();
+renderStay();
+renderDaily();
+renderLists();
+loadWeather();
+</script>
+</body>
+</html>
